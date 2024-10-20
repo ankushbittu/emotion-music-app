@@ -1,0 +1,20 @@
+# Ignore Python virtual environment
+venv/
+backend/venv
+
+# Ignore any large files related to packages
+*.pyd
+*.dll
+*.so
+*.bin
+*.h5
+
+# Ignore node_modules for frontend
+frontend/node_modules/
+
+# Ignore TensorFlow binaries
+*.pyd
+*.dll
+tensorflow/
+ml_model/
+ml_model/data
