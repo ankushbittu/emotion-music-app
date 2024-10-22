@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();  // Use React Router's useNavigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,9 +32,12 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Store the JWT token (you can use localStorage or sessionStorage)
+        // Store the JWT token
         localStorage.setItem('token', data.access_token);
-        setMessage('Login successful!');
+        setMessage('Login successful! Redirecting...');
+
+        // Redirect to dashboard (or your main project page)
+        navigate('/dashboard');
       } else {
         setMessage(data.msg || 'Error logging in');
       }
