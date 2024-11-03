@@ -168,3 +168,26 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.emotion-profile {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.results-section h2, h3 {
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.6;
+}
+

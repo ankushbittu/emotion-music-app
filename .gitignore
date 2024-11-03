@@ -1,6 +1,7 @@
 # Ignore Python virtual environment
 venv/
 backend/venv
+backend/.env
 
 # Ignore any large files related to packages
 *.pyd

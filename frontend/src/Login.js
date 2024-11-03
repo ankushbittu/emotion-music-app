@@ -1,23 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [message, setMessage] = useState('');
-  const navigate = useNavigate();  // Use React Router's useNavigate
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
@@ -26,37 +14,32 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Store the JWT token
-        localStorage.setItem('token', data.access_token);
-        setMessage('Login successful! Redirecting...');
-
-        // Redirect to dashboard (or your main project page)
-        navigate('/dashboard');
+        localStorage.setItem('token', data.access_token);  // Store JWT token
+        window.location.href = '/dashboard';  // Redirect to dashboard
       } else {
-        setMessage(data.msg || 'Error logging in');
+        setError(data.msg || 'Login failed');
       }
     } catch (error) {
-      setMessage('Error connecting to the server');
+      setError('Error connecting to the server');
     }
   };
 
   return (
     <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
         <div>
           <label>Email:</label>
           <input
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -64,15 +47,15 @@ const Login = () => {
           <label>Password:</label>
           <input
             type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
         <button type="submit">Login</button>
       </form>
-      {message && <p>{message}</p>}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };
