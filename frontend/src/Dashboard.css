@@ -1,0 +1,71 @@
+/* General container styling */
+.dashboard-container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Center and style the heading */
+h1 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Webcam container */
+.webcam-container {
+  display: inline-block;
+  border: 2px solid #ddd;
+  text-align: center;
+  border-radius: 10px;
+  padding: 8px;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-bottom: 40px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Video element styling */
+.webcam-container video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+  margin: auto;
+}
+
+/* Loading spinner styling */
+.spinner {
+  display: block;
+  margin: 10px auto;
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Image preview styling */
+.webcam-container img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

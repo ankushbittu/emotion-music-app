@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
+import './Dashboard.css';
+
 
 const Dashboard = () => {
   const [emotion, setEmotion] = useState('');
@@ -7,6 +9,7 @@ const Dashboard = () => {
   const [artist, setArtist] = useState('');
   const [language, setLanguage] = useState('');
   const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false); // Define loading state
   const [error, setError] = useState('');
 
   const webcamRef = useRef(null);
@@ -40,6 +43,7 @@ const Dashboard = () => {
     }
 
     setError('');  // Clear any previous errors
+    setLoading(true); // Start loading
 
     try {
       const formData = new FormData();
@@ -58,11 +62,21 @@ const Dashboard = () => {
       }
 
       const data = await response.json();
-      setEmotion(data.emotion);  // Basic emotion detected by the model
-      setDetailedEmotion(data.detailed_emotion);  // Detailed emotional profile from the LLM
+
+      // Update to match the keys returned from the backend
+      if (data.success) {
+        setEmotion(data.emotion_detected);  // Use 'emotion_detected' to match the backend response
+        setDetailedEmotion(data.detailed_emotion);  // Detailed emotional profile from the LLM
+      } else {
+        setError(data.error || 'Unexpected error occurred. Please try again.');
+      }
     } catch (error) {
       console.error('Error:', error);
       setError(`Error: ${error.message}. Please ensure the backend server is running.`);
+      setLoading(false); // Start loading
+    }
+    finally {
+      setLoading(false); // Stop loading, regardless of success or failure
     }
   };
 
@@ -92,6 +106,7 @@ const Dashboard = () => {
       <button className="logout-button" onClick={handleLogout}>Logout</button>
 
       <h1>Music Recommendation Dashboard</h1>
+      {loading && <div className="spinner"></div>}
 
       <div className="webcam-container">
         {!image && (
