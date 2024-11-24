@@ -2,10 +2,10 @@ import React, { useState, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
 import './Dashboard.css';
 
-
 const Dashboard = () => {
   const [emotion, setEmotion] = useState('');
   const [detailedEmotion, setDetailedEmotion] = useState('');
+  const [playlistLink, setPlaylistLink] = useState(''); // Add playlist link state
   const [artist, setArtist] = useState('');
   const [language, setLanguage] = useState('');
   const [image, setImage] = useState(null);
@@ -63,19 +63,17 @@ const Dashboard = () => {
 
       const data = await response.json();
 
-      // Update to match the keys returned from the backend
       if (data.success) {
         setEmotion(data.emotion_detected);  // Use 'emotion_detected' to match the backend response
         setDetailedEmotion(data.detailed_emotion);  // Detailed emotional profile from the LLM
+        setPlaylistLink(data.playlist_url);  // Set playlist link from the backend
       } else {
         setError(data.error || 'Unexpected error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
       setError(`Error: ${error.message}. Please ensure the backend server is running.`);
-      setLoading(false); // Start loading
-    }
-    finally {
+    } finally {
       setLoading(false); // Stop loading, regardless of success or failure
     }
   };
@@ -85,13 +83,10 @@ const Dashboard = () => {
     window.location.href = '/login';
   };
 
-  // Helper function to format LLM output into structured HTML
   const renderDetailedEmotion = () => {
     if (!detailedEmotion) return null;
 
-    // Split the text into sections based on the LLM output
     const sections = detailedEmotion.split('*');
-
     return (
       <div className="emotion-profile">
         {sections.map((section, index) => (
@@ -159,8 +154,16 @@ const Dashboard = () => {
           {renderDetailedEmotion()}
         </div>
       )}
+
+      {playlistLink && (
+        <div className="playlist-section">
+          <h3>Your Spotify Playlist:</h3>
+          <a href={playlistLink} target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Dashboard;
+

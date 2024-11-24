@@ -19,3 +19,4 @@ frontend/node_modules/
 tensorflow/
 ml_model/
 ml_model/data
+.cache

@@ -1,8 +1,9 @@
-import google.generativeai as genai
 import os
+import requests
+import google.generativeai as genai
 from dotenv import load_dotenv
 from flask import Blueprint, request, jsonify
-from flask_cors import CORS  # Added for CORS
+from flask_cors import CORS
 from models import User
 from extensions import db
 from tensorflow.keras.models import load_model
@@ -10,10 +11,12 @@ import numpy as np
 import cv2
 import logging
 from flask_jwt_extended import create_access_token
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyOAuth
 
 # Setting up blueprint and logging
 main = Blueprint('main', __name__)
-CORS(main)  # Allow CORS for all routes under 'main'
+CORS(main)
 logging.basicConfig(level=logging.DEBUG)
 
 @main.route('/')
@@ -53,9 +56,22 @@ def login():
 # Load environment variables from .env file
 load_dotenv()
 
-# Load the Gemini API key from the .env file
+# Load Gemini and Spotify credentials
 gemini_api_key = os.getenv('GEMINI_API_KEY')
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+SPOTIFY_REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI")
+
+# Configure Gemini API
 genai.configure(api_key=gemini_api_key)
+
+# Configure Spotify OAuth
+sp_oauth = SpotifyOAuth(
+    client_id=SPOTIFY_CLIENT_ID,
+    client_secret=SPOTIFY_CLIENT_SECRET,
+    redirect_uri=SPOTIFY_REDIRECT_URI,
+    scope="playlist-modify-public"
+)
 
 # Load the trained CNN model
 model_path = "C:/Users/HP BITTU/Downloads/emotion_basic.keras"
@@ -65,26 +81,27 @@ model = load_model(model_path)
 face_cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 face_cascade = cv2.CascadeClassifier(face_cascade_path)
 
-# Define the emotion labels
+# Define emotion labels
 emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-# Updated function to call Gemini API
+# Helper function to call Gemini API
 def get_llm_response(prompt):
     try:
-        # Configure the model
         model = genai.GenerativeModel('gemini-pro')
-        
-        # Create the chat
         chat = model.start_chat(history=[])
-        
-        # Get the response
         response = chat.send_message(prompt)
         logging.debug(f"LLM Response: {response.text}")
-        
-        return response.text
+        return response.text.strip()
     except Exception as e:
         logging.error(f"Error calling LLM API: {e}")
         return None
+
+# Helper function for Spotify API
+def get_spotify_client():
+    token_info = sp_oauth.get_cached_token()
+    if not token_info:
+        token_info = sp_oauth.get_access_token(as_dict=True)
+    return Spotify(auth=token_info['access_token'])
 
 @main.route('/emotion/detect_emotion', methods=['POST'])
 def detect_emotion():
@@ -92,85 +109,78 @@ def detect_emotion():
     image_file = request.files.get('image')
 
     if not image_file or not data.get('artist') or not data.get('language'):
-        logging.error("Missing image, artist, or language")
         return jsonify({"error": "Missing image, artist, or language"}), 400
 
     try:
-        # Convert the image using OpenCV
-        image_bytes = image_file.read()  # Read the image file
-        logging.debug("Image bytes read successfully")
-        
-        image_array = np.frombuffer(image_bytes, np.uint8)  # Convert to numpy array
-        logging.debug("Image converted to numpy array successfully")
-
-        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)  # Decode image from bytes
-        if image is None:
-            logging.error("Failed to decode image")
-            return jsonify({"error": "Invalid image format"}), 400
-
-        # Convert to grayscale
+        # Preprocess image
+        image_bytes = image_file.read()
+        image_array = np.frombuffer(image_bytes, np.uint8)
+        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        logging.debug("Image converted to grayscale successfully")
-
-        # Detect the face in the image using Haar Cascade
         faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
         if len(faces) == 0:
-            logging.warning("No face detected in the image")
             return jsonify({"error": "No face detected in the image"}), 400
 
-        # Assuming only one face, take the first detected face
         x, y, w, h = faces[0]
-        logging.debug(f"Face detected at coordinates: x={x}, y={y}, w={w}, h={h}")
-
-        # Extract the region of interest (the face)
-        face = gray_image[y:y+h, x:x+w]
-
-        # Resize the face to 48x48 (or the required size)
+        face = gray_image[y:y + h, x:x + w]
         resized_face = cv2.resize(face, (48, 48))
-        logging.debug("Face resized successfully")
-
-        # Normalize pixel values to be between 0 and 1
         normalized_face = resized_face / 255.0
-
-        # Add an extra dimension to match the expected input shape (batch size, height, width, channels)
-        face_array = np.expand_dims(normalized_face, axis=0)  # Add batch dimension
-        face_array = np.expand_dims(face_array, axis=-1)  # Add channel dimension for grayscale
-
-        # Predict the emotion using the CNN model
+        face_array = np.expand_dims(normalized_face, axis=(0, -1))
         predictions = model.predict(face_array)
-        logging.info(f"Model prediction: {predictions}")
-
-        # Get the predicted emotion with the highest probability
         predicted_emotion = emotion_labels[np.argmax(predictions)]
-        logging.info(f"Predicted Emotion: {predicted_emotion}")
 
-        # Get artist and language from the form data
+        # Generate prompt for LLM
+        
         artist = data.get('artist')
         language = data.get('language')
-
-        # Create the LLM prompt for the detected emotion
         prompt = f"""
-        The user is feeling {predicted_emotion} based on facial expression analysis. 
-        They prefer songs in {language} and like artists such as {artist}. 
-        Provide a detailed emotional profile and suggest music themes or specific song recommendations that would suit their mood.
-        """
-        logging.debug(f"Prompt for LLM: {prompt}")
+            The user is feeling {predicted_emotion}, and they prefer songs by the artist "{artist}". The recommendations should primarily include songs by "{artist}" that align with this emotion and are available in "{language}".
 
-        # Get response from the LLM using Gemini
+            If there aren’t enough songs by "{artist}" that match, include tracks from similar artists in "{language}" who resonate with the "{predicted_emotion}" mood.
+
+            Provide a structured list of at least 15 songs:
+            1. Start with tracks by "{artist}" that align with the "{predicted_emotion}" mood.
+            2. If necessary, add similar songs from related artists and briefly explain their connection to the mood and genre.
+            3. Ensure the songs are listed in the format: "Song Title - Artist Name".
+
+            For example:
+            1. "Blinding Lights - The Weeknd" (Mood: Happy, Genre: Synthwave)
+            2. "Can't Feel My Face - The Weeknd" (Mood: Playful, Genre: Pop)
+            ...
+            """
         llm_output = get_llm_response(prompt)
-        if llm_output is None:
-            logging.error("Failed to get response from LLM")
+        if not llm_output:
             return jsonify({"error": "Failed to get response from LLM"}), 500
+
+        # Extract songs from LLM response
+        song_recommendations = [song.strip() for song in llm_output.split("\n") if song]
+
+        # Create Spotify playlist
+        spotify = get_spotify_client()
+        user_id = spotify.me()['id']
+        playlist = spotify.user_playlist_create(
+            user_id, f"{predicted_emotion.capitalize()} Mood Playlist", public=True
+        )
+        playlist_id = playlist['id']
+
+        # Add songs to playlist
+        track_ids = []
+        for song in song_recommendations:
+            search_results = spotify.search(q=song, type='track', limit=1)
+            if search_results['tracks']['items']:
+                track_ids.append(search_results['tracks']['items'][0]['uri'])
+
+        if track_ids:
+            spotify.playlist_add_items(playlist_id, track_ids)
 
         return jsonify({
             "success": True,
             "emotion_detected": predicted_emotion,
-            "detailed_emotion": llm_output
+            "detailed_emotion": llm_output,
+            "playlist_url": playlist['external_urls']['spotify']
         })
 
     except Exception as e:
-        logging.error(f"Unexpected error during emotion detection: {e}")
-        return jsonify({
-            "success": False,
-            "error": f"Unexpected error during emotion detection: {str(e)}"
-        }), 500
+        logging.error(f"Unexpected error: {e}")
+        return jsonify({"error": str(e)}), 500
