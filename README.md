@@ -1,7 +1,8 @@
 Emotion-Driven Music Recommendation System
 This project is an intelligent music recommendation system that leverages facial emotion recognition and large language models (LLMs) to enhance the personalization of music recommendations. It captures real-time emotions through a camera, analyzes them using a Convolutional Neural Network (CNN), and suggests music tracks that match the detected emotion using the Spotify API.
 
-Table of Contents
+Table of Contents:
+
 Features
 Technologies Used
 Project Architecture
@@ -10,6 +11,7 @@ Usage
 Future Improvements
 License
 Features
+
 Real-time Emotion Detection: Recognizes facial emotions using a CNN model trained on the FER 2013 dataset with 69% accuracy.
 Music Recommendation via Spotify API: Provides music suggestions that align with the detected emotion.
 Integration with LLMs: Generates nuanced emotion analysis and personalized recommendations, enhancing user engagement.
