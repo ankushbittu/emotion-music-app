@@ -145,8 +145,8 @@ def detect_emotion():
             3. Ensure the songs are listed in the format: "Song Title - Artist Name".
 
             For example:
-            1. "Blinding Lights - The Weeknd" (Mood: Happy, Genre: Synthwave)
-            2. "Can't Feel My Face - The Weeknd" (Mood: Playful, Genre: Pop)
+            1. "Blinding Lights" - "The Weeknd" (Mood: Happy, Genre: Synthwave)
+            2. "Can't Feel My Face" - "The Weeknd" (Mood: Playful, Genre: Pop)
             ...
             """
         llm_output = get_llm_response(prompt)

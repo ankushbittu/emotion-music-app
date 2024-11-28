@@ -101,8 +101,7 @@ const Dashboard = () => {
       <button className="logout-button" onClick={handleLogout}>Logout</button>
 
       <h1>Music Recommendation Dashboard</h1>
-      {loading && <div className="spinner"></div>}
-
+      
       <div className="webcam-container">
         {!image && (
           <>
@@ -142,6 +141,8 @@ const Dashboard = () => {
           placeholder="Enter your preferred language"
         />
       </div>
+      
+      {loading && <div className="spinner"></div>}
 
       <button onClick={handleSend}>Submit</button>
 

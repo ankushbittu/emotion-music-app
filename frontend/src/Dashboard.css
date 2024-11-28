@@ -1,35 +1,11 @@
-/* General container styling */
 .dashboard-container {
-  font-family: Arial, sans-serif;
   max-width: 600px;
-  margin: auto;
-  text-align: center;
+  margin: 80px auto; /* Increased the top margin from 50px to 80px */
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Center and style the heading */
-h1 {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* Webcam container */
-.webcam-container {
-  display: inline-block;
-  border: 2px solid #ddd;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border-radius: 10px;
-  padding: 8px;
-  background-color: #fff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  margin-bottom: 40px;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 /* Video element styling */
@@ -47,7 +23,7 @@ h1 {
   margin: 10px auto;
   width: 50px;
   height: 50px;
-  border: 5px solid #ddd;
+  border: 5px solid #cd2a2a;
   border-top: 5px solid #007bff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -69,3 +45,93 @@ h1 {
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c9302c;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.input-section {
+  margin-top: 80px;
+  margin-bottom: 40px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #357abf;
+}
+
+.playlist-section {
+  margin-top: 30px;
+}
+
+a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.emotion-profile {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+
+}
+
+.results-section h2, h3 {
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.6;
+}
+

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './login.css'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -6,7 +7,7 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault();         
 
     try {
       const response = await fetch('http://127.0.0.1:5000/login', {
