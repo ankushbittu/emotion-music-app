@@ -100,7 +100,7 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <button className="logout-button" onClick={handleLogout}>Logout</button>
 
-      <h1>Music Recommendation Dashboard</h1>
+      <h4>Music Recommendation Dashboard</h4>
       
       <div className="webcam-container">
         {!image && (

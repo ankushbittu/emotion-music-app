@@ -135,8 +135,10 @@ def detect_emotion():
         artist = data.get('artist')
         language = data.get('language')
         prompt = f"""
-            "The user is experiencing an emotional state categorized as {predicted_emotion}. They prefer songs in {language} and specifically like artists such as {artist}. Create a list of at least 15 songs that align with this emotional state and genre preference. Prioritize songs by {A} first, and if additional songs are needed, include tracks from similar artists in {language} who match the {predicted_emotion} mood. Provide the output in a comma-separated format as song name - artist name for easy platform compatibility."
-            """
+                    The user is experiencing an emotional state categorized as {predicted_emotion}. They prefer songs in {language} and specifically like artists such as {artist}. Create a list of at least 15 songs that align with this emotional state and genre preference. Prioritize songs by {artist} first, and if additional songs are needed, include tracks from similar artists in {language} who match the {predicted_emotion} mood. Ensure the song list includes only studio-recorded versions of songs by explicitly stating the artist and album when applicable.
+                  """
+
+
         llm_output = get_llm_response(prompt)
         if not llm_output:
             return jsonify({"error": "Failed to get response from LLM"}), 500
