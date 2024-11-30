@@ -135,19 +135,7 @@ def detect_emotion():
         artist = data.get('artist')
         language = data.get('language')
         prompt = f"""
-            The user is feeling {predicted_emotion}, and they prefer songs by the artist "{artist}". The recommendations should primarily include songs by "{artist}" that align with this emotion and are available in "{language}".
-
-            If there aren’t enough songs by "{artist}" that match, include tracks from similar artists in "{language}" who resonate with the "{predicted_emotion}" mood.
-
-            Provide a structured list of at least 15 songs:
-            1. Start with tracks by "{artist}" that align with the "{predicted_emotion}" mood.
-            2. If necessary, add similar songs from related artists and briefly explain their connection to the mood and genre.
-            3. Ensure the songs are listed in the format: "Song Title - Artist Name".
-
-            For example:
-            1. "Blinding Lights" - "The Weeknd" (Mood: Happy, Genre: Synthwave)
-            2. "Can't Feel My Face" - "The Weeknd" (Mood: Playful, Genre: Pop)
-            ...
+            "The user is experiencing an emotional state categorized as {predicted_emotion}. They prefer songs in {language} and specifically like artists such as {artist}. Create a list of at least 15 songs that align with this emotional state and genre preference. Prioritize songs by {A} first, and if additional songs are needed, include tracks from similar artists in {language} who match the {predicted_emotion} mood. Provide the output in a comma-separated format as song name - artist name for easy platform compatibility."
             """
         llm_output = get_llm_response(prompt)
         if not llm_output:

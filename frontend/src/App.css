@@ -1,15 +1,15 @@
 /* General Styles */
 /* Body Styling */
 body {
-  background: linear-gradient(-45deg, #00c6ff, #0072ff, #ff0080, #ff8c00);
+  background: linear-gradient(-45deg, #10b647, #0e3d76, #ff0080, #ff8c00);
   background-size: 400% 400%;
   animation: gradientMove 8s ease infinite;
   font-family: 'Roboto', sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  height: 100%;
   margin: 0;
+  overflow: auto;
 }
 
 /* Navigation Bar */
@@ -60,10 +60,10 @@ form {
   width: 320px;
 }
 
-h2 {
-  margin-bottom: 20px;
+h1 {
+  margin-top: 400px;
   font-size: 24px;
-  color: #0e0e0e;
+  color: #000000;
   font-weight: bold;
 }
 
@@ -131,6 +131,8 @@ form button:hover {
     background-position: 0% 50%;
   }
 }
+
+
 
 @keyframes slideIn {
   from {
