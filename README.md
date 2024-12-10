@@ -96,11 +96,8 @@ EDM-Playlist AI is an advanced music recommendation system that leverages facial
 
 ---
 
-## Contributors
-- [Your Name]  
-- [Teammates: Ankusk Reddy Merugu, Pranay Kumar Jeedigari, Dileep Kumar Reddy Mandla]
 
----
+
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
@@ -108,4 +105,4 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 ## Acknowledgments
-Special thanks to the creators of the FER-2013 dataset, Spotify API, and open-source libraries that made this project possible.
+Special thanks to the creators of the FER-2013 dataset, Spotify API, and open-source libraries and geminiai that made this project possible.
