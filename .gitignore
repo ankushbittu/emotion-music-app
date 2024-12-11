@@ -15,6 +15,7 @@ backend/instance
 # Ignore node_modules for frontend
 frontend/node_modules/
 
+
 # Ignore TensorFlow binaries
 *.pyd
 *.dll
@@ -22,3 +23,7 @@ tensorflow/
 ml_model/
 ml_model/data
 .cache
+EDM.PPT
+EDM.pdf
+~$EDM.ppt
+

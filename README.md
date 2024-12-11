@@ -38,6 +38,7 @@ EDM-Playlist AI is an advanced music recommendation system that leverages facial
 4. **Music Recommendation:**
    - Based on the emotional profile, the system interacts with the Spotify API to retrieve appropriate music recommendations.
    - The curated playlist is displayed to the user.
+   ![work Flow](media/image-1.png)
 
 ---
 
@@ -77,6 +78,13 @@ EDM-Playlist AI is an advanced music recommendation system that leverages facial
 
 ## Dataset
 - **Facial Emotion Recognition Dataset (FER-2013):** Used for training the CNN model to classify emotions.
+![dataset](media/image-2.png)
+
+- **Model**
+![modelarchitecture](media/image-3.png)
+
+- **Results**
+![matrix](media/image-4.png)
 
 ---
 
