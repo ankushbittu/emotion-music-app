@@ -3,6 +3,11 @@
 ## Overview
 EDM-Playlist AI is an advanced music recommendation system that leverages facial emotion recognition and natural language processing to personalize music playlists for users. By analyzing user emotions via facial expressions and integrating nuanced emotion interpretation through a Large Language Model (LLM), the system creates highly tailored music suggestions.
 
+## Team Members: 
+Ankush Reddy Merugu,  
+Pranay Kumar Jeedigari,  
+Dileep Kumar Reddy Mandla
+
 ---
 
 ## Features
